@@ -47,6 +47,9 @@ class TestCase extends Orchestra
             NotificationsServiceProvider::class,
             SchemasServiceProvider::class,
             SupportServiceProvider::class,
+            // Livewire must register after Filament's SupportServiceProvider: that provider
+            // binds a non-shared DataStore override, which would otherwise replace the
+            // singleton Livewire registers for itself and break component rendering.
             LivewireServiceProvider::class,
             TablesServiceProvider::class,
             WidgetsServiceProvider::class,

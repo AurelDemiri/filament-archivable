@@ -13,9 +13,13 @@ This filament plugin adds an [ArchiveAction](#archive-and-unarchive-table-action
 ## Requirements
 
 - PHP ^8.3
-- Laravel ^11.0 || ^12.0
+- Laravel ^11.0 || ^12.0 || ^13.0
 - Filament ^4.0 || ^5.0
-- Laravel Archivable ^1.0 (installed with this plugin)
+- Laravel Archivable ^1.4 (installed with this plugin)
+
+> Looking for Filament v3? Use the [`okeonline/filament-archivable`](https://github.com/okeonline/filament-archivable) package this plugin was forked from.
+
+> The Filament documentation links below point to the v4 docs. If you are on Filament v5, the same pages are available under [`/docs/5.x/`](https://filamentphp.com/docs/5.x).
 
 ## Installation
 

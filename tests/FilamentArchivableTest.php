@@ -1,9 +1,7 @@
 <?php
 
-use Statik\FilamentArchivable\Actions\ArchiveAction as ActionsArchiveAction;
-use Statik\FilamentArchivable\Actions\ArchiveAction as TableArchiveAction;
-use Statik\FilamentArchivable\Actions\UnArchiveAction as ActionsUnArchiveAction;
-use Statik\FilamentArchivable\Actions\UnArchiveAction as TableUnArchiveAction;
+use Statik\FilamentArchivable\Actions\ArchiveAction;
+use Statik\FilamentArchivable\Actions\UnArchiveAction;
 use Statik\FilamentArchivable\FilamentArchivablePlugin;
 use Statik\FilamentArchivable\Tables\Filters\ArchivedFilter;
 use Statik\FilamentArchivable\Tests\TestModels\ModelWithArchivableTrait;
@@ -63,8 +61,8 @@ it('does not show (un)ArchivedActions when Archivable-trait is not used', functi
         ->assertSuccessful()
         ->assertCanSeeTableRecords($both)
         ->assertCountTableRecords(2)
-        ->assertTableActionDoesNotExist(TableUnArchiveAction::class, record: $modelWithArchivedAt->nth(1))
-        ->assertTableActionDoesNotExist(TableArchiveAction::class, record: $modelWithArchivedAt->nth(2));
+        ->assertTableActionDoesNotExist(UnArchiveAction::class, record: $modelWithArchivedAt->nth(1))
+        ->assertTableActionDoesNotExist(ArchiveAction::class, record: $modelWithArchivedAt->nth(2));
 });
 
 // filters
@@ -120,8 +118,8 @@ it('shows row-action archive, only on unarchived rows', function () {
         ->assertSuccessful()
         ->assertCanSeeTableRecords($modelWithoutArchivedAt)
         ->assertCountTableRecords(1)
-        ->assertTableActionVisible(TableArchiveAction::class, record: $modelWithoutArchivedAt->first())
-        ->assertTableActionHidden(TableUnArchiveAction::class, record: $modelWithoutArchivedAt->first());
+        ->assertTableActionVisible(ArchiveAction::class, record: $modelWithoutArchivedAt->first())
+        ->assertTableActionHidden(UnArchiveAction::class, record: $modelWithoutArchivedAt->first());
 
 });
 
@@ -134,8 +132,8 @@ it('shows row-action unarchive, only on archived rows', function () {
         ->assertSuccessful()
         ->assertCanSeeTableRecords($modelWithArchivedAt)
         ->assertCountTableRecords(1)
-        ->assertTableActionVisible(TableUnArchiveAction::class, record: $modelWithArchivedAt->first())
-        ->assertTableActionHidden(TableArchiveAction::class, record: $modelWithArchivedAt->first());
+        ->assertTableActionVisible(UnArchiveAction::class, record: $modelWithArchivedAt->first())
+        ->assertTableActionHidden(ArchiveAction::class, record: $modelWithArchivedAt->first());
 
 });
 
@@ -148,9 +146,9 @@ it('archives the model if ArchiveAction is called', function () {
         ->assertSuccessful()
         ->assertCanSeeTableRecords($modelWithoutArchivedAt)
         ->assertCountTableRecords(1)
-        ->assertTableActionExists(TableArchiveAction::class, record: $modelWithoutArchivedAt->first())
+        ->assertTableActionVisible(ArchiveAction::class, record: $modelWithoutArchivedAt->first())
 
-        ->callTableAction(TableArchiveAction::class, $modelWithoutArchivedAt->first())
+        ->callTableAction(ArchiveAction::class, $modelWithoutArchivedAt->first())
         ->assertHasNoTableActionErrors();
 
     expect($modelWithoutArchivedAt->first()->refresh()->archived_at)
@@ -166,10 +164,10 @@ it('unarchives the model if UnarchiveAction is called', function () {
         ->assertSuccessful()
         ->assertCanSeeTableRecords($modelWithArchivedAt)
         ->assertCountTableRecords(1)
-        ->assertTableActionExists(TableUnArchiveAction::class, record: $modelWithArchivedAt->first())
-        ->assertTableActionHidden(TableArchiveAction::class, record: $modelWithArchivedAt->first())
+        ->assertTableActionVisible(UnArchiveAction::class, record: $modelWithArchivedAt->first())
+        ->assertTableActionHidden(ArchiveAction::class, record: $modelWithArchivedAt->first())
 
-        ->callTableAction(TableUnArchiveAction::class, $modelWithArchivedAt->first())
+        ->callTableAction(UnArchiveAction::class, $modelWithArchivedAt->first())
         ->assertHasNoTableActionErrors();
 
     expect($modelWithArchivedAt->first()->refresh()->archived_at)
@@ -182,8 +180,8 @@ it('can show archive Action on Edit page', function () {
 
     livewire(ModelWithArchivableTraitResource\Pages\EditPage::class, ['record' => $unArchivedModels->first()->getKey()])
         ->assertSuccessful()
-        ->assertActionExists(ActionsArchiveAction::class)
-        ->assertActionVisible(ActionsArchiveAction::class);
+        ->assertActionExists(ArchiveAction::class)
+        ->assertActionVisible(ArchiveAction::class);
 
 });
 
@@ -193,8 +191,8 @@ it('can show unarchive Action on Edit page', function () {
 
     livewire(ModelWithArchivableTraitResource\Pages\EditPage::class, ['record' => $archivedModels->first()->getKey()])
         ->assertSuccessful()
-        ->assertActionExists(ActionsUnArchiveAction::class)
-        ->assertActionVisible(ActionsUnArchiveAction::class);
+        ->assertActionExists(UnArchiveAction::class)
+        ->assertActionVisible(UnArchiveAction::class);
 
 });
 
@@ -204,8 +202,8 @@ it('does not show the unarchived action on a unarchived record', function () {
 
     livewire(ModelWithArchivableTraitResource\Pages\EditPage::class, ['record' => $unArchivedModels->first()->getKey()])
         ->assertSuccessful()
-        ->assertActionExists(ActionsUnArchiveAction::class)
-        ->assertActionHidden(ActionsUnArchiveAction::class);
+        ->assertActionExists(UnArchiveAction::class)
+        ->assertActionHidden(UnArchiveAction::class);
 
 });
 
@@ -215,8 +213,8 @@ it('does not show the archive action on a archived record', function () {
 
     livewire(ModelWithArchivableTraitResource\Pages\EditPage::class, ['record' => $archivedModels->first()->getKey()])
         ->assertSuccessful()
-        ->assertActionExists(ActionsArchiveAction::class)
-        ->assertActionHidden(ActionsArchiveAction::class);
+        ->assertActionExists(ArchiveAction::class)
+        ->assertActionHidden(ArchiveAction::class);
 
 });
 
@@ -226,8 +224,8 @@ it('can archive a model on Edit page', function () {
 
     livewire(ModelWithArchivableTraitResource\Pages\EditPage::class, ['record' => $unArchivedModel->getKey()])
         ->assertSuccessful()
-        ->assertActionVisible(ActionsArchiveAction::class)
-        ->callAction(ActionsArchiveAction::class);
+        ->assertActionVisible(ArchiveAction::class)
+        ->callAction(ArchiveAction::class);
 
     $unArchivedModel->refresh();
 
@@ -240,8 +238,8 @@ it('can unarchive a model on Edit page', function () {
 
     livewire(ModelWithArchivableTraitResource\Pages\EditPage::class, ['record' => $archivedModel->getKey()])
         ->assertSuccessful()
-        ->assertActionVisible(ActionsUnArchiveAction::class)
-        ->callAction(ActionsUnArchiveAction::class);
+        ->assertActionVisible(UnArchiveAction::class)
+        ->callAction(UnArchiveAction::class);
 
     $archivedModel->refresh();
 

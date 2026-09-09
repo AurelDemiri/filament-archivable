@@ -2,6 +2,19 @@
 
 All notable changes to `filament-archivable` will be documented in this file.
 
+## v1.3.0 - 2026-09-04
+
+### What's Changed
+
+* Filament 5 by @vanneszias in https://github.com/statikbe/filament-archivable/pull/1
+* fix(docs): update readme by @vanneszias in https://github.com/statikbe/filament-archivable/pull/2
+
+### New Contributors
+
+* @vanneszias made their first contribution in https://github.com/statikbe/filament-archivable/pull/1
+
+**Full Changelog**: https://github.com/statikbe/filament-archivable/compare/v1.2.0...v1.3.0
+
 ## v1.2.0 - 2024-12-17
 
 ### What's Changed
